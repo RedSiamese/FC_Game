@@ -14,4 +14,66 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FC\FC_IMAGE.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FC\FC_MATH.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FC\FC_SDE.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulator\FC_camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulator\FC_car.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulator\FC_env.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulator\FC_map.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulator\FC_math.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulator\FC_thread_show.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="FCMAP0.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="FCMAP1.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="FCMAP2.png">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="opencv_ffmpeg341_64.dll">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="opencv_world341.dll">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="opencv_world341d.dll">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="未标题-1.psd">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FC_MAIN.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FC_PYTHON.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

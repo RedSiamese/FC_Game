@@ -69,7 +69,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_64\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -115,6 +117,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="FC\FC_IMAGE.h" />
+    <ClInclude Include="FC\FC_MATH.h" />
+    <ClInclude Include="FC\FC_SDE.h" />
+    <ClInclude Include="Simulator\FC_camera.h" />
+    <ClInclude Include="Simulator\FC_car.h" />
+    <ClInclude Include="Simulator\FC_env.h" />
+    <ClInclude Include="Simulator\FC_map.h" />
+    <ClInclude Include="Simulator\FC_math.h" />
+    <ClInclude Include="Simulator\FC_thread_show.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="FCMAP0.png" />
+    <Image Include="FCMAP1.png" />
+    <Image Include="FCMAP2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="opencv_ffmpeg341_64.dll" />
+    <None Include="opencv_world341.dll" />
+    <None Include="opencv_world341d.dll" />
+    <None Include="未标题-1.psd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FC_MAIN.cpp" />
+    <ClCompile Include="FC_PYTHON.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
