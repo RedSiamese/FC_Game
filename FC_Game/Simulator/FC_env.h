@@ -1,14 +1,13 @@
 #pragma once
 
-#include "FC_map.h"
 #include "FC_car.h"
 
 #include <vector>
-#include <string>
 
 #include <windows.h>
 #include <thread>
-using namespace std;
+
+void refresh(void*);
 
 class FC_ENV {
 public:
@@ -21,10 +20,11 @@ public:
 
 		cvCvtColor(map.get_map(), trail, CV_GRAY2BGR);
 		isstart=false; time=0; 
+		time_speed = 1;
 	}
 
 	FC_ENV(const string & str)
-		:map(FC_MAP(str)),
+		:map(str),
 		show(cvCreateImage(cvSize(map.get_map()->width, map.get_map()->height), 8, 3)),
 		temp_show(cvCreateImage(cvSize(map.get_map()->width, map.get_map()->height), 8, 3)),
 		trail(cvCreateImage(cvSize(map.get_map()->width, map.get_map()->height), 8, 3)),
@@ -32,6 +32,7 @@ public:
 
 		cvCvtColor(map.get_map(), trail, CV_GRAY2BGR);
 		isstart=false; time = 0; 
+		time_speed = 1;
 	}
 
 	FC_MAP& get_map() {
@@ -80,10 +81,11 @@ public:
 	}
 
 	int get_time() {
-		return time;
+		return time/ time_speed;
 	}
 
 	void add_car(FC_CAR*car) {
+		if (cars.size() >= 6) { return; }
 		for (int i = 0; i < cars.size(); i++) {
 			if (cars[i] == NULL) {
 				cars[i] = car;
@@ -101,6 +103,30 @@ public:
 		}
 	}
 
+	void set_car_xy(const string &name, const FC_POINT& p) {
+		for (int i = 0; i < cars.size(); i++) {
+			if (cars[i]->get_name() == name) {
+				cars[i]->set_loc(p);
+			}
+		}
+	}
+
+	void set_car_dir(const string &name, float dir) {
+		for (int i = 0; i < cars.size(); i++) {
+			if (cars[i]->get_name() == name) {
+				cars[i]->set_dir(dir);
+			}
+		}
+	}
+
+	void set_car_velocity(const string &name, float v) {
+		for (int i = 0; i < cars.size(); i++) {
+			if (cars[i]->get_name() == name) {
+				cars[i]->set_velocity(v);
+			}
+		}
+	}
+
 	void delete_car(const string &name) {
 		for (int i = 0; i < cars.size(); i++) {
 			if (cars[i]->get_name() == name) {
@@ -112,7 +138,11 @@ public:
 
 	void start() { isstart = true; }
 
-	friend void refresh(FC_ENV* env);
+	void set_time_speed(float zoom) {
+		time_speed = (zoom > 1) ? zoom : 1;
+	}
+
+	friend void refresh(void*);
 
 private:
 	FC_ENV(FC_ENV & ENV);
@@ -127,9 +157,12 @@ private:
 	IplImage* trail;
 	IplImage* temp_show;
 	thread thread_refresh;
+
+	float time_speed;
 };
 
-void refresh(FC_ENV* env) {
+void refresh(void* p) {
+	FC_ENV* env = (FC_ENV*)p;
 	while (1) {
 		Sleep(1);
 		env->refresh_show();
@@ -137,7 +170,7 @@ void refresh(FC_ENV* env) {
 		if (env->isstart) {
 			env->time++;
 			for (int i = env->cars.size() - 1; i > -1; i--) {
-				env->cars[i]->move();
+				env->cars[i]->refresh_state(env->time_speed);
 			}
 		}
 		

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <opencv2\opencv.hpp>
-
 #define ABS(x) (((x)>0)?(x):-(x))
 #define SGN(x) (((x)>0)?1:-1)
 #define ROUND(x,L,R) (((x)<(L))?(L):((x)>(R))?(R):(x))
@@ -13,8 +11,14 @@
 
 typedef struct FC_POINT
 {
-	float X;	//รื
-	float Y;	//รื
+	float X;	//cm
+	float Y;	//cm
+
+	FC_POINT(){}
+	FC_POINT(float x, float y) {
+		X = x;
+		Y = y;
+	}
 }FC_POINT, FC_VECTOR;
 
 static unsigned long fcx = 5128238, fcy = 1124132, fcz = 152341, fcw = 2596459;

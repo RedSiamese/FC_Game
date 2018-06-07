@@ -4,16 +4,11 @@
 
 #include "FC_map.h"
 #include "FC_camera.h"
-#include "FC_math.h"
-#include <thread>
 
+#include <thread>
 #include <opencv2\opencv.hpp>
 #include <Windows.h>
 
-
-
-//厘米每脕E
-//度每脕E
 struct FC_CAR_VELOCITY
 {
 	float linear_velocity;
@@ -24,26 +19,30 @@ class FC_CAR
 {
 public:
 	FC_CAR(const string &name, FC_MAP &map, FC_POINT &start, float dir, float wb, float cam_degree, float cam_h, float cam_d);
-	FC_CAR::FC_CAR(FC_CAR & car, string &name);
+	FC_CAR(FC_CAR & car, const string &name);
 	~FC_CAR();
 
 	const string&get_name();
 
 	const FC_POINT& get_loc();
+	void set_loc(const FC_POINT&);
 	float get_dir();
+	void set_dir(float dir);
 	float get_wheel_base();
 	float get_steering_angle();
 	float get_dst_angle();
 	FC_CAR_VELOCITY get_velocity();
 
+	void set_velocity(float velocity);
+
 	void refresh_sight();
 	const IplImage* get_sight();
 
-	void set_dst_velocity(float velocity);
+	void set_dst_velocity(float v);
 	void set_dst_angle(float ang);
 	void set_steering_angle(float ang);
 
-	void move();
+	void refresh_state(float zoom);
 
 	void control(float degree, float velocity);
 	friend void camera_refresh(FC_CAR* car);
@@ -127,7 +126,7 @@ FC_CAR::FC_CAR(const string &name, FC_MAP &map, FC_POINT &start, float dir, floa
 	refresh_finish = false;
 }
 
-FC_CAR::FC_CAR(FC_CAR & car, string &name):
+FC_CAR::FC_CAR(FC_CAR & car,const string &name):
 map(car.map), thread_refresh(camera_refresh, this), cam(car.cam)
 {
 	this->name = name;
@@ -167,14 +166,29 @@ inline const FC_POINT& FC_CAR::get_loc()
 	return location;
 }
 
+inline void FC_CAR::set_loc(const FC_POINT & p)
+{
+	location = p;
+}
+
 inline float FC_CAR::get_dir()
 {
 	return direction;
 }
 
+inline void FC_CAR::set_dir(float dir)
+{
+	direction=dir;
+}
+
 inline FC_CAR_VELOCITY FC_CAR::get_velocity()
 {
 	return velocity;
+}
+
+inline void FC_CAR::set_velocity(float v)
+{
+	velocity.linear_velocity = v;
 }
 
 inline float FC_CAR::get_wheel_base()
@@ -239,9 +253,9 @@ inline bool FC_CAR::is_refresh_finish()
 }
 
 
-void FC_CAR::move()
+void FC_CAR::refresh_state(float zoom)
 {
-
+	float time_pass = 0.001 / zoom;
 	//P=TN/9550其中N由v代替
 	//速度变化
 	//功率
@@ -254,7 +268,7 @@ void FC_CAR::move()
 	f+= fc_random_f(-0.1, 0.1);
 	
 	//轮转角
-	steering_angle += SGN(dst_angle - steering_angle)*ROUND(velocity.angular_velocity*0.001, 0, ABS(dst_angle - steering_angle));
+	steering_angle += SGN(dst_angle - steering_angle)*ROUND(velocity.angular_velocity*time_pass, 0, ABS(dst_angle - steering_angle));
 	ROUND(steering_angle, -CV_PI / 3, CV_PI / 3);
 
 	//计算转向半径
@@ -269,15 +283,15 @@ void FC_CAR::move()
 
 	//速度变化
 	float a = F / weight * 100;
-	velocity.linear_velocity += a * 0.001;
+	velocity.linear_velocity += a * time_pass;
 
 	//移动
 	//无转角
 	if (ABS(steering_angle) < FLT_EPSILON) {
 		float dir_degree = direction;
 
-		location.X += cos(dir_degree) * velocity.linear_velocity*0.001/*0.001s*/;
-		location.Y += sin(dir_degree) * velocity.linear_velocity*0.001/*0.001s*/;
+		location.X += cos(dir_degree) * velocity.linear_velocity*time_pass;
+		location.Y += sin(dir_degree) * velocity.linear_velocity*time_pass;
 	}
 	//转弯
 	else {
@@ -285,7 +299,7 @@ void FC_CAR::move()
 		R = MAX(ABS(R), ABS(min_R))*SGN(R);
 		
 		//转角
-		float degree = velocity.linear_velocity*0.001 / R;
+		float degree = velocity.linear_velocity*time_pass / R;
 
 		float l = 2 * R*sin(degree / 2);
 

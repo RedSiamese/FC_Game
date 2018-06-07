@@ -1,25 +1,13 @@
-#pragma once
 
 #include <python.h>
 
-#include "Simulator\FC_map.h"
 #include "Simulator\FC_env.h"
-#include "Simulator\FC_car.h"
-#include "Simulator\FC_math.h"
 #include "Simulator\FC_thread_show.h"
-
 
 #include "FC\FC_SDE.h"
 #include "FC\FC_IMAGE.h"
 
-
-#include <iostream>
-
 FC_ENV *game_env;
-
-FC_THREAD_SHOW *win_env;
-
-
 
 void game_init(string path) {
 
@@ -28,7 +16,6 @@ void game_init(string path) {
 	fc_xorshift_init(litmp.QuadPart % 100000);
 
 	game_env = new FC_ENV(path);
-//	game_env->add_car(new FC_CAR("0",game_env->get_map(), FC_POINT{ 380.0, 50.0 }, 0, 20, -17.32050808 / 360 * 2 * CV_PI, 0.45, 27.0));
 
 	new FC_THREAD_SHOW(game_env->get_show(), "env");
 	Sleep(500);
@@ -36,6 +23,12 @@ void game_init(string path) {
 
 void add_car(const char*name, FC_POINT start_point) {
 	game_env->add_car(new FC_CAR(name, game_env->get_map(), start_point, 0, 20, -17.32050808 / 360 * 2 * CV_PI, 0.45, 27.0));
+}
+
+void set_car(const char*name, FC_POINT point, float dir, float v) {
+	game_env->set_car_xy(name, point);
+	game_env->set_car_dir(name, dir);
+	game_env->set_car_velocity(name, v);
 }
 
 void delete_car(const char*name) {
@@ -107,15 +100,17 @@ int get_time() {
 	return game_env->get_time();
 }
 
-
 void start() {
 	game_env->start();
 }
+
 void sleep(int i) {
 	cvWaitKey(i);
 }
 
-
+void set_time_speed(double zoom) {
+	game_env->set_time_speed(zoom);
+}
 
 static PyObject *Extest_game_init(PyObject *self, PyObject *args) {
 	char* s;
@@ -136,6 +131,19 @@ static PyObject *Extest_add_car(PyObject *self, PyObject *args) {
 		return NULL;
 	}
 	add_car(s, FC_POINT{(float)x,(float)y});
+
+	return (PyObject *)Py_BuildValue("");
+}
+
+static PyObject *Extest_set_car(PyObject *self, PyObject *args) {
+
+	char* s;
+	double x, y, dir, v;
+
+	if (!(PyArg_ParseTuple(args, "s(dd)dd", &s, &x, &y , &dir, &v))) {
+		return NULL;
+	}
+	set_car(s, FC_POINT{ (float)x,(float)y }, dir, v);
 
 	return (PyObject *)Py_BuildValue("");
 }
@@ -277,11 +285,21 @@ static PyObject *Extest_sleep(PyObject *self, PyObject *args) {
 	return (PyObject *)Py_BuildValue("");
 }
 
+static PyObject *Extest_set_time_speed(PyObject *self, PyObject *args) {
+	double d;
+	if (!(PyArg_ParseTuple(args, "d", &d))) {
+		return NULL;
+	}
+	set_time_speed(d);
+	return (PyObject *)Py_BuildValue("");
+}
+
 static PyMethodDef
 ExtestMethods[] =
 {
 	{ "game_init", Extest_game_init, METH_VARARGS,"game_init(map_path) \nparam(string)" },
-{ "add_car", Extest_add_car, METH_VARARGS,"add_car(car_name, (x, y)) \nparam(string, (int, int)) \nadd a car on map (x, y)." },
+{ "add_car", Extest_add_car, METH_VARARGS,"add_car(car_name, (x, y)) \nparam(string, (double, double)) \nadd a car on map (x, y)." },
+{ "set_car", Extest_set_car, METH_VARARGS,"set_car(car_name, (x, y), dir, v) \nparam(string, (double, double), double, double) \nset car at (x, y) in direction dir and velocity v." },
 { "delete_car", Extest_delete_car, METH_VARARGS,"delete_car(car_name) \nparam(string)" },
 { "ctrl", Extest_ctrl, METH_VARARGS,"ctrl(car_name, degree, velocity) \nparam(string, double, double)" },
 { "get_velocity", Extest_get_velocity, METH_VARARGS,"get_velocity(car_name) \nparam(string) \nreturn velocity(double)." },
@@ -291,6 +309,7 @@ ExtestMethods[] =
 { "get_time", Extest_get_time, METH_VARARGS,"get_time() \nreturn time(int) from game start." },
 { "start", Extest_start, METH_VARARGS,"start() \ngame start." },
 { "sleep", Extest_sleep, METH_VARARGS,"sleep(n) \nparam(int) \nwait for about n ms." },
+{ "set_time_speed", Extest_set_time_speed, METH_VARARGS,"set_time_speed(n) \nparam(double) \ntime goes speed n times slow." },
 { NULL, NULL },
 };
 

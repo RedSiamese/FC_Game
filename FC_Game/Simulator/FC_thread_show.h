@@ -1,13 +1,12 @@
 #pragma once
 
-#include "FC_math.h"
-#include "FC_map.h"
-#include "FC_car.h"
+#include <opencv2/opencv.hpp>
 #include <thread>
 #include <string>
-#include <windows.h>
 
 using namespace std;
+
+void window(void*);
 
 class FC_THREAD_SHOW
 {
@@ -21,14 +20,15 @@ public:
 		cvShowImage(str.c_str(), img);
 		cv::waitKey(1);
 	}
-	friend void window(FC_THREAD_SHOW *win);
+	friend void window(void*);
 private:
 	const IplImage * img;
 	const string str;
 	thread thread_window;
 };
 
-void window(FC_THREAD_SHOW *win) {
+void window(void *p) {
+	FC_THREAD_SHOW* win = (FC_THREAD_SHOW*)p;
 	cvNamedWindow(win->str.c_str(), 1);
 	while (1) {
 		win->show_window();

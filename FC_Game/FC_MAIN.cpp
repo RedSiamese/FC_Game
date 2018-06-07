@@ -1,8 +1,5 @@
 
-#include "Simulator\FC_map.h"
 #include "Simulator\FC_env.h"
-#include "Simulator\FC_car.h"
-#include "Simulator\FC_math.h"
 #include "Simulator\FC_thread_show.h"
 
 
@@ -12,10 +9,10 @@
 #include <io.h>
 #include <shlobj.h>
 
+using namespace std;
+
 FC_ENV *game_env;
 
-FC_THREAD_SHOW *win_env;
-FC_THREAD_SHOW *win_sight;
 
 int tt = 0;
 
@@ -71,18 +68,21 @@ int main() {
 
 	LARGE_INTEGER litmp;
 	QueryPerformanceCounter(&litmp);
-	fc_xorshift_init(litmp.QuadPart % 100000);
+	fc_xorshift_init(litmp.QuadPart % 100000);/**/
 
 	game_env = new FC_ENV("FCMAP1.png");
-
-	win_env = new FC_THREAD_SHOW(game_env->get_show(), "env");
+	new FC_THREAD_SHOW(game_env->get_show(), "env");
 
 	Sleep(500);
 
-	game_env->add_car(new FC_CAR("0", game_env->get_map(), FC_POINT{ 380.0, 40.0 }, 0, 20, -17.32050808 / 360 * 2 * CV_PI, 0.45, 27.0));
-	for (;;) {
+	FC_POINT p(380.0, 40.0);
+	game_env->add_car(new FC_CAR(string("0"), game_env->get_map(), p, 0.0, 20.0, -17.32050808 / 360 * 2 * CV_PI, 0.45, 27.0));
 
+	game_env->set_time_speed(20);
 
+	for (game_env->start();;) {
+
+		game_env->get_car("0").control(10, 100);
 		Sleep(1);
 	}
 	

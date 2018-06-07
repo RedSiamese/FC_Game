@@ -72,8 +72,5 @@
     <ClCompile Include="FC_MAIN.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FC_PYTHON.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
