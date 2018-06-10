@@ -89,6 +89,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -113,6 +114,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -126,6 +128,7 @@
     <ClInclude Include="Simulator\FC_camera.h" />
     <ClInclude Include="Simulator\FC_car.h" />
     <ClInclude Include="Simulator\FC_env.h" />
+    <ClInclude Include="Simulator\FC_game.h" />
     <ClInclude Include="Simulator\FC_map.h" />
     <ClInclude Include="Simulator\FC_math.h" />
     <ClInclude Include="Simulator\FC_thread_show.h" />
@@ -143,6 +146,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FC_MAIN.cpp" />
+    <ClCompile Include="Simulator\FC_camera.cpp" />
+    <ClCompile Include="Simulator\FC_car.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Simulator\FC_env.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Simulator\FC_map.cpp" />
+    <ClCompile Include="Simulator\FC_math.cpp" />
+    <ClCompile Include="Simulator\FC_thread_show.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

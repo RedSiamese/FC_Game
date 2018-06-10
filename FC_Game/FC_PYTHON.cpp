@@ -1,8 +1,9 @@
 
 #include <python.h>
 
-#include "Simulator\FC_env.h"
-#include "Simulator\FC_thread_show.h"
+#include "Simulator\FC_game.h"
+// #include "Simulator\FC_env.h"
+// #include "Simulator\FC_thread_show.h"
 
 #include "FC\FC_SDE.h"
 #include "FC\FC_IMAGE.h"
@@ -22,7 +23,7 @@ void game_init(string path) {
 }
 
 void add_car(const char*name, FC_POINT start_point) {
-	game_env->add_car(new FC_CAR(name, game_env->get_map(), start_point, 0, 20, -17.32050808 / 360 * 2 * CV_PI, 0.45, 27.0));
+	game_env->add_car(new FC_CAR(name, *game_env, start_point, 0, 20, -17.32050808 / 360 * 2 * CV_PI, 0.45, 27.0));
 }
 
 void set_car(const char*name, FC_POINT point, float dir, float v) {

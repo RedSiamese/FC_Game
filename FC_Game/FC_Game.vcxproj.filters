@@ -42,6 +42,9 @@
     <ClInclude Include="Simulator\FC_thread_show.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Simulator\FC_game.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="FCMAP0.png">
@@ -70,6 +73,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FC_MAIN.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulator\FC_car.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulator\FC_env.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulator\FC_map.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulator\FC_thread_show.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulator\FC_camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulator\FC_math.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
