@@ -26,9 +26,11 @@ void add_car(const char*name, FC_POINT start_point) {
 }
 
 void set_car(const char*name, FC_POINT point, float dir, float v) {
+	game_env->get_car(name).control(0, v);
+	game_env->set_car_velocity(name, v);
 	game_env->set_car_xy(name, point);
 	game_env->set_car_dir(name, dir);
-	game_env->set_car_velocity(name, v);
+	
 }
 
 void delete_car(const char*name) {
@@ -100,6 +102,10 @@ int get_time() {
 	return game_env->get_time();
 }
 
+void map_clear() {
+	game_env->trail_clear();
+}
+
 void start() {
 	game_env->start();
 }
@@ -164,7 +170,7 @@ static PyObject *Extest_ctrl(PyObject *self, PyObject *args) {
 		return NULL;
 	}
 	ctrl(s, degree, velocity);
-	//ÐèÒª°ÑcÖÐ¼ÆËãµÄ½á¹û×ª³Épython¶ÔÏó£¬s´ú±úóÖ·û´®¶ÔÏóÀàÐÍ¡£
+	//ï¿½ï¿½Òªï¿½ï¿½cï¿½Ð¼ï¿½ï¿½ï¿½Ä½ï¿½ï¿½×ªï¿½ï¿½pythonï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¡ï¿½
 	return (PyObject *)Py_BuildValue("");
 }
 
@@ -276,6 +282,11 @@ static PyObject *Extest_start(PyObject *self, PyObject *args) {
 	return Py_BuildValue("");
 }
 
+static PyObject *Extest_map_clear(PyObject *self, PyObject *args) {
+	map_clear();
+	return Py_BuildValue("");
+}
+
 static PyObject *Extest_sleep(PyObject *self, PyObject *args) {
 	int i;
 	if (!(PyArg_ParseTuple(args, "i", &i))) {
@@ -308,6 +319,7 @@ ExtestMethods[] =
 { "get_ti", Extest_get_ti, METH_VARARGS,"get_ti(car_name) \nparam(string) \nreturn 3 edge in a dictionary(dict) \nkey use \"mid\"\"right\"\"left\". each edge is a list of list like [[x0,y0],[x1,y1]...], from near to far." },
 { "get_time", Extest_get_time, METH_VARARGS,"get_time() \nreturn time(int) from game start." },
 { "start", Extest_start, METH_VARARGS,"start() \ngame start." },
+{ "map_clear", Extest_map_clear, METH_VARARGS,"map_clear() \nclear map." },
 { "sleep", Extest_sleep, METH_VARARGS,"sleep(n) \nparam(int) \nwait for about n ms." },
 { "set_time_speed", Extest_set_time_speed, METH_VARARGS,"set_time_speed(n) \nparam(double) \ntime goes speed n times slow." },
 { NULL, NULL },

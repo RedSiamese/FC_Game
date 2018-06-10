@@ -136,6 +136,8 @@ public:
 		}
 	}
 
+	void trail_clear(){ cvCvtColor(map.get_map(), trail, CV_GRAY2BGR); }
+
 	void start() { isstart = true; }
 
 	void set_time_speed(float zoom) {
