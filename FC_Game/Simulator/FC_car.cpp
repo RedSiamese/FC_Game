@@ -60,37 +60,37 @@ FC_CAR::~FC_CAR()
 	cvReleaseImage(&sight);
 }
 
-inline const string & FC_CAR::get_name()
+ const string & FC_CAR::get_name()
 {
 	return name;
 }
 
-inline const FC_POINT& FC_CAR::get_loc()
+ const FC_POINT& FC_CAR::get_loc()
 {
 	return location;
 }
 
-inline void FC_CAR::set_loc(const FC_POINT & p)
+ void FC_CAR::set_loc(const FC_POINT & p)
 {
 	location = p;
 }
 
-inline float FC_CAR::get_dir()
+ float FC_CAR::get_dir()
 {
 	return direction;
 }
 
-inline void FC_CAR::set_dir(float dir)
+ void FC_CAR::set_dir(float dir)
 {
 	direction = dir;
 }
 
-inline FC_CAR_VELOCITY FC_CAR::get_velocity()
+ FC_CAR_VELOCITY FC_CAR::get_velocity()
 {
 	return velocity;
 }
 
-inline void FC_CAR::set_velocity(float v)
+ void FC_CAR::set_velocity(float v)
 {
 	velocity.linear_velocity = v;
 }
@@ -154,42 +154,42 @@ void FC_CAR::refresh_state(float zoom)
 
 }
 
-inline float FC_CAR::get_wheel_base()
+ float FC_CAR::get_wheel_base()
 {
 	return wheel_base;
 }
 
-inline float FC_CAR::get_steering_angle()
+ float FC_CAR::get_steering_angle()
 {
 	return steering_angle;
 }
 
-inline float FC_CAR::get_dst_angle()
+ float FC_CAR::get_dst_angle()
 {
 	return dst_angle;
 }
 
-inline const IplImage * FC_CAR::get_sight()
+ const IplImage * FC_CAR::get_sight()
 {
 	return sight;
 }
 
-inline void FC_CAR::set_dst_velocity(float v)
+ void FC_CAR::set_dst_velocity(float v)
 {
 	dst_velocity = v;
 }
 
-inline void FC_CAR::set_dst_angle(float ang)
+ void FC_CAR::set_dst_angle(float ang)
 {
 	dst_angle = (ABS(ang) < CV_PI / 3) ? (ang) : (SGN(ang)*CV_PI / 3);
 }
 
-inline void FC_CAR::set_steering_angle(float ang)
+ void FC_CAR::set_steering_angle(float ang)
 {
 	steering_angle = ang;
 }
 
-inline void FC_CAR::refresh_sight()
+ void FC_CAR::refresh_sight()
 {
 	IplImage * temp_sight;
 	FC_MAP& map = env.get_map();
@@ -199,18 +199,18 @@ inline void FC_CAR::refresh_sight()
 	cvReleaseImage(&temp_sight);
 }
 
-inline void FC_CAR::control(float degree, float velocity)
+ void FC_CAR::control(float degree, float velocity)
 {
 	set_dst_velocity(velocity);
 	set_dst_angle(degree);
 }
 
-inline const FC_camera & FC_CAR::get_cam()
+ const FC_camera & FC_CAR::get_cam()
 {
 	return cam;
 }
 
-inline bool FC_CAR::is_refresh_finish()
+ bool FC_CAR::is_refresh_finish()
 {
 	return refresh_finish;
 }

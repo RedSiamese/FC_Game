@@ -2,9 +2,10 @@
 
 #define A_V (float)CV_PI*3.0F
 
+#include "FC_math.h"
 #include "FC_env.h"
 #include "FC_camera.h"
-#include "FC_math.h"
+
 
 #include "..\FC\FC_SDE.h"
 #include "..\FC\FC_IMAGE.h"
@@ -99,6 +100,5 @@ private:
 	FC_ENV& env;	//µØÍ¼
 
 	thread thread_refresh;
-	
-};
 
+};

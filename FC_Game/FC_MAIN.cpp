@@ -1,12 +1,11 @@
 
-
-#include <io.h>
-#include <shlobj.h>
-
 #include "Simulator\FC_game.h"
 
 #include "FC\FC_SDE.h"
 #include "FC\FC_IMAGE.h"
+
+#include <io.h>
+#include <shlobj.h>
 
 using namespace std;
 

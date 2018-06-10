@@ -6,11 +6,11 @@ FC_MAP::FC_MAP(const string &path)
 	fc_map = cvLoadImage(path.c_str(), CV_LOAD_IMAGE_ANYDEPTH);
 }
 
-inline FC_MAP::FC_MAP(FC_MAP & map) {
+FC_MAP::FC_MAP(FC_MAP & map) {
 	this->fc_map = cvCloneImage(map.get_map());
 }
 
-inline FC_MAP::FC_MAP(IplImage * map)
+FC_MAP::FC_MAP(IplImage * map)
 {
 	this->fc_map = cvCloneImage(map);
 }
@@ -20,7 +20,7 @@ FC_MAP::~FC_MAP()
 	cvReleaseImage(&fc_map);
 }
 
-inline IplImage * FC_MAP::get_rectangle(float w, float h, const FC_VECTOR & loc, float dir)
+IplImage * FC_MAP::get_rectangle(float w, float h, const FC_VECTOR & loc, float dir)
 {
 
 	//把图逆时针旋转dir度，取wh矩形
@@ -42,7 +42,7 @@ inline IplImage * FC_MAP::get_rectangle(float w, float h, const FC_VECTOR & loc,
 	return img_transformation;
 }
 
-inline const IplImage * FC_MAP::get_map()
+const IplImage * FC_MAP::get_map()
 {
 	return fc_map;
 }

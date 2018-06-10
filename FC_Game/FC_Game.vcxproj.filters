@@ -93,5 +93,11 @@
     <ClCompile Include="Simulator\FC_math.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="FC\FC_IMAGE.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FC\FC_MATH.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
