@@ -97,6 +97,7 @@ FC_CAR::~FC_CAR()
 
 void FC_CAR::refresh_state(float zoom)
 {
+	if (!zoom) zoom = 1;
 	float time_pass = 0.001 / zoom;
 	//P=TN/9550其中N由v代替
 	//速度变化
@@ -263,12 +264,11 @@ fc_track_info FC_CAR::get_track_info(FC_CAR& car)
 
 
 void camera_refresh(FC_CAR* car) {
+	int time = -5;
 	while (1) {
-		Sleep(4);
-
+		if (car->env.get_time_speed())Sleep(4);
 		car->refresh_finish = false;
 		car->refresh_sight();
 		car->refresh_finish = true;
-
 	}
 }

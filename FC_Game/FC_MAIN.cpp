@@ -76,12 +76,19 @@ int main() {
 	FC_POINT p(380.0, 40.0);
 	game_env->add_car(new FC_CAR(string("0"), *game_env, p, 0.0, 20.0, -17.32050808 / 360 * 2 * CV_PI, 0.45, 27.0));
 
-	game_env->set_time_speed(20);
-
+	game_env->set_time_speed(0);
+	
+	auto w = game_env->get_car("0").get_sight()->width;
+	
 	for (game_env->start();;) {
-
-		game_env->get_car("0").control(10, 100);
+		game_env->get_car("0").set_velocity(100);
+		
+		auto TI = FC_CAR::get_track_info(game_env->get_car("0"));
+		auto d = 0.04*(TI.mid_curve.point[0].x - w / 2) + 0.04*(TI.mid_curve.point[TI.mid_curve.size / 4].x - w / 2) + 0.04*(TI.mid_curve.point[TI.mid_curve.size / 2].x - w / 2);
+		game_env->get_car("0").control(d, 100);
 		Sleep(1);
+
+		//printf("%lf", game_env->get_time());
 	}
 	
 }

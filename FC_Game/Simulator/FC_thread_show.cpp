@@ -16,6 +16,6 @@ void window(void *p) {
 	cvNamedWindow(win->str.c_str(), 1);
 	while (1) {
 		win->show_window();
-		cvWaitKey(16);
+		cvWaitKey(15);
 	}
 }

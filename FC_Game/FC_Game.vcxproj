@@ -149,6 +149,10 @@
     <ClCompile Include="FC\FC_IMAGE.cpp" />
     <ClCompile Include="FC\FC_MATH.cpp" />
     <ClCompile Include="FC_MAIN.cpp" />
+    <ClCompile Include="FC_PYTHON.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Simulator\FC_camera.cpp" />
     <ClCompile Include="Simulator\FC_car.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

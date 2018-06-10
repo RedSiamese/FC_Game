@@ -73,7 +73,9 @@ void FC_ENV::refresh_show() {
 }
 
 int FC_ENV::get_time() {
-	return time / time_speed;
+	if(time_speed)
+		return time / time_speed;
+	else return time;
 }
 
 void FC_ENV::add_car(FC_CAR*car) {
@@ -133,13 +135,17 @@ void FC_ENV::trail_clear() { cvCvtColor(map.get_map(), trail, CV_GRAY2BGR); }
 void FC_ENV::start() { isstart = true; }
 
 void FC_ENV::set_time_speed(float zoom) {
-	time_speed = (zoom > 1) ? zoom : 1;
+	time_speed = (zoom > 1) ? zoom : (zoom == 0) ? 0 : 1;
+}
+
+float FC_ENV::get_time_speed() {
+	return time_speed;
 }
 
 void refresh(void* p) {
 	FC_ENV* env = (FC_ENV*)p;
 	while (1) {
-		Sleep(1);
+		if(env->time_speed)Sleep(1);
 		env->refresh_show();
 
 		if (env->isstart) {

@@ -32,7 +32,7 @@ public:
 	void trail_clear();
 	void start();
 	void set_time_speed(float zoom);
-
+	float get_time_speed();
 	
 	friend void refresh(void*);
 
@@ -42,7 +42,7 @@ private:
 	vector<FC_POINT> len;
 	
 	bool isstart;
-	int time;
+	double time;
 	FC_MAP map;
 	vector<FC_CAR*> cars;
 	IplImage* show;

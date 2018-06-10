@@ -99,5 +99,8 @@
     <ClCompile Include="FC\FC_MATH.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="FC_PYTHON.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
