@@ -51,6 +51,7 @@ public:
 	void set_dst_velocity(float v);
 	void set_dst_angle(float ang);
 	void set_steering_angle(float ang);
+	void set_f_env(float);
 
 	void refresh_state(float zoom);
 
@@ -80,6 +81,7 @@ private:
 	FC_POINT location;
 	float dst_velocity;
 
+	float f_env;
 	float f_system;
 	float f_wheel;
 

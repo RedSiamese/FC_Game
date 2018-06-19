@@ -6,6 +6,10 @@ FC_POINT::FC_POINT(float x, float y) {
 	Y = y;
 }
 
+void FC_POINT::operator=(const FC_POINT &p){
+	X = p.X; Y = p.Y;
+}
+
 void fc_xorshift_init(unsigned int num) {
 	fcx += ((float)num / 2293 - num / 2293) * 1000000;
 	fcy += ((float)num / 2393 - num / 2393) * 1000000;

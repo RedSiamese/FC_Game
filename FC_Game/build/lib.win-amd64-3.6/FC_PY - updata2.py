@@ -78,6 +78,8 @@ while times:
     while  abs((fc.get_time()-start_time-normal_working)*fc.get_velocity('0')/100000) < 0.3 and abs(normal_working*fc.get_velocity('0')/100000) < 60:
         p=ddpg.predict(s[-1])
         a += [p[0]]
+        if ddpg.frame<ddpg.REPLAY_CAPACITY/8:
+            a[-1] = np.array([0.,100.])
         a[-1] = np.random.normal(a[-1]*np.random.uniform(max(1-np.sqrt(var[0]),0),2), var,2)
 
         fc.ctrl('0',*(a[-1]))
@@ -100,19 +102,19 @@ while times:
     at = np.mean(np.array(s)[:min(len(s),40),10])
     mv = np.mean(np.array(s)[:,10])
 
-    LAST_FRAME=200
+    LAST_FRAME=100
     if ddpg.frame>ddpg.REPLAY_CAPACITY/8:
         s,a,r,s_ = s[max(0,len(s)-LAST_FRAME):],a[max(0,len(a)-LAST_FRAME):],r[max(0,len(r)-LAST_FRAME):],s_[max(0,len(s_)-LAST_FRAME):]
     N, ep_reward = 5, 0
     for pointer in range(len(s_)-1):
         r_ =  [np.mean(np.array(r[min(len(r)-1,pointer+N//4):min(pointer+N+1,len(r))]))/49, 
-                -(1-sigmoid_((s_[pointer][10]-100)/64))]
+                -(1-sigmoid_((np.mean(np.array(s_[min(len(s_)-1,pointer+N//4):min(pointer+N+1,len(s_))])[:,10]))/64))]
         ddpg.record(s=s[pointer], a=a[pointer], r = r_, s_ = s_[min(pointer + N,len(s_)-1)])
         ep_reward += np.array(r_)
         print(r_)
 
     print("mr", ep_reward/(normal_working+1)*FRAME_SPACING, "at", int(at), "mv", int(mv))
-    if(ddpg.frame)>ddpg.REPLAY_CAPACITY/8:
+    if ddpg.frame>ddpg.REPLAY_CAPACITY/8:
         fc.set_time_speed(1)
 
     if times%5 ==0 or normal_working/100000*fc.get_velocity('0') > 30:

@@ -19,6 +19,7 @@ FC_CAR::FC_CAR(const string &name, FC_ENV &env_, FC_POINT &start, float dir, flo
 	dst_angle = 0.0;
 	dst_velocity = 0.0;
 
+	f_env = 0.1;
 	f_system = 1.0;
 	f_wheel = 8.0;
 	weight = 1.0;
@@ -46,6 +47,7 @@ FC_CAR::FC_CAR(FC_CAR & car, const string &name) :
 	dst_angle = car.dst_angle;
 	dst_velocity = car.dst_velocity;
 
+	f_env = car.f_env;
 	f_system = car.f_system;
 	f_wheel = car.f_wheel;
 	weight = car.weight;
@@ -102,13 +104,13 @@ void FC_CAR::refresh_state(float zoom)
 	//P=TN/9550其中N由v代替
 	//速度变化
 	//功率
-	float P = f_system * dst_velocity;
+	float P = (f_system+f_env) * dst_velocity;
 	//转矩
 	float F = P / (ABS(velocity.linear_velocity) + 0.00001);
-	float f = SGN(velocity.linear_velocity)*f_system;
+	float f = SGN(velocity.linear_velocity)*(f_system + f_env);
 
 	float f_wheel_temp = f_wheel + fc_random_f(-velocity.linear_velocity / 500, 0.2);
-	f += fc_random_f(-0.1, 0.1);
+	f *= fc_random_f(0.9, 1.1);
 
 	//轮转角
 	steering_angle += SGN(dst_angle - steering_angle)*ROUND(velocity.angular_velocity*time_pass, 0, ABS(dst_angle - steering_angle));
@@ -121,7 +123,7 @@ void FC_CAR::refresh_state(float zoom)
 	//算出打滑时的阻力
 	f += ROUND(ABS(weight * pow(velocity.linear_velocity / 100, 2) / R * 100) - f_wheel_temp, 0, 10);
 
-	f = -f * SGN(velocity.linear_velocity)*IF(velocity.linear_velocity);
+	f = (velocity.linear_velocity)? -f * SGN(velocity.linear_velocity): f = -ROUND(f, 0, ABS(F))* SGN(F);
 	F = ROUND(F + f, -f_wheel_temp, f_wheel_temp);
 
 	//速度变化
@@ -189,6 +191,11 @@ void FC_CAR::refresh_state(float zoom)
 {
 	steering_angle = ang;
 }
+
+ void FC_CAR::set_f_env(float f)
+ {
+	 f_env = f;
+ }
 
  void FC_CAR::refresh_sight()
 {

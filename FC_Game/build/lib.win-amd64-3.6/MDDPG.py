@@ -30,7 +30,7 @@ class DDPG(object):
         a_ = self.actor_net(self.S_, reuse=True, custom_getter=ema_getter)
         q_ = self.critic_net(self.S_, a_, reuse=True, custom_getter=ema_getter)
 
-        a_loss = - tf.reduce_mean(self.q) + tf.reduce_mean(tf.square(self.a))/32
+        a_loss = - tf.reduce_mean(self.q)# + tf.reduce_mean(tf.square(self.a))/32
         self.a_regression = tf.train.AdamOptimizer(0.001).minimize(loss=a_loss, var_list=a_params)
 
         with tf.control_dependencies(target_update):
@@ -44,8 +44,8 @@ class DDPG(object):
         trainable = True if reuse is None else False
         with tf.name_scope('Actor'):
             with tf.variable_scope('vActor', reuse=reuse, custom_getter=custom_getter):
-                a = tf.layers.dense(s, 32, activation=tf.nn.relu, trainable=trainable, kernel_regularizer=tf.nn.l2_loss )
-                return tf.layers.dense(a, self.a_dim, activation=sigmoid_, trainable=trainable, kernel_regularizer=tf.nn.l2_loss)
+                a = tf.layers.dense(s, 32, activation=tf.nn.relu, trainable=trainable )
+                return tf.layers.dense(a, self.a_dim, activation=sigmoid_, trainable=trainable)
                 
 
     def critic_net(self, s, a, reuse=None, custom_getter=None):
@@ -53,8 +53,8 @@ class DDPG(object):
         with tf.name_scope('Critic'):
             with tf.variable_scope('vCritic', reuse=reuse, custom_getter=custom_getter):
                 net=tf.concat([s,a], 1)
-                net = tf.layers.dense(net, 32, activation=tf.nn.relu, trainable=trainable, kernel_regularizer=tf.nn.l2_loss)
-                return tf.layers.dense(net, self.r_dim, trainable=trainable, kernel_regularizer=tf.nn.l2_loss)
+                net = tf.layers.dense(net, 32, activation=tf.nn.relu, trainable=trainable)
+                return tf.layers.dense(net, self.r_dim, trainable=trainable)
                 
     def predict(self, s):
         return self.sess.run([self.a, self.q], feed_dict={self.S:s[np.newaxis, :]})[0]*np.array([self.a_bound])

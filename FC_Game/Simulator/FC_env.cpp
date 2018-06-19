@@ -31,7 +31,7 @@ FC_MAP& FC_ENV::get_map() {
 	return map;
 }
 
-FC_ENV::~FC_ENV() { cvReleaseImage(&show); cvReleaseImage(&temp_show); }
+FC_ENV::~FC_ENV() { cvReleaseImage(&show); cvReleaseImage(&temp_show); cvReleaseImage(&trail);}
 
 const IplImage* FC_ENV::get_show() { return show; }
 
@@ -97,28 +97,16 @@ FC_CAR & FC_ENV::get_car(const string &name) {
 	}
 }
 
-void FC_ENV::set_car_xy(const string &name, const FC_POINT& p) {
-	for (int i = 0; i < cars.size(); i++) {
-		if (cars[i]->get_name() == name) {
-			cars[i]->set_loc(p);
-		}
-	}
+void FC_ENV::set_car_xy(FC_CAR &car, const FC_POINT& p) {
+	car.set_loc(p);
 }
 
-void FC_ENV::set_car_dir(const string &name, float dir) {
-	for (int i = 0; i < cars.size(); i++) {
-		if (cars[i]->get_name() == name) {
-			cars[i]->set_dir(dir);
-		}
-	}
+void FC_ENV::set_car_dir(FC_CAR &car, float dir) {
+	car.set_dir(dir);
 }
 
-void FC_ENV::set_car_velocity(const string &name, float v) {
-	for (int i = 0; i < cars.size(); i++) {
-		if (cars[i]->get_name() == name) {
-			cars[i]->set_velocity(v);
-		}
-	}
+void FC_ENV::set_car_velocity(FC_CAR &car, float v) {
+	car.set_velocity(v);
 }
 
 void FC_ENV::delete_car(const string &name) {
@@ -128,6 +116,16 @@ void FC_ENV::delete_car(const string &name) {
 			cars[i] = NULL;
 		}
 	}
+}
+
+bool FC_ENV::isinside(FC_CAR &car) {
+
+	FC_POINT loc = car.get_loc();
+	const IplImage*pmap = map.get_map();
+	if (loc.Y >= 0 && loc.Y< pmap->height && loc.X >= 0 && loc.X< pmap->width && cvGet2D(pmap, car.get_loc().X, car.get_loc().Y).val[0]>128) {
+		return true;
+	}
+	else return false;
 }
 
 void FC_ENV::trail_clear() { cvCvtColor(map.get_map(), trail, CV_GRAY2BGR); }
@@ -144,6 +142,8 @@ float FC_ENV::get_time_speed() {
 
 void refresh(void* p) {
 	FC_ENV* env = (FC_ENV*)p;
+	auto map = env->map.get_map();
+	
 	while (1) {
 		if(env->time_speed)Sleep(1);
 		env->refresh_show();
@@ -151,6 +151,12 @@ void refresh(void* p) {
 		if (env->isstart) {
 			env->time++;
 			for (int i = env->cars.size() - 1; i > -1; i--) {
+				if (env->isinside(*env->cars[i])) {
+					env->cars[i]->set_f_env(0.1);
+				}
+				else {
+					env->cars[i]->set_f_env(1.6);
+				}
 				env->cars[i]->refresh_state(env->time_speed);
 			}
 		}

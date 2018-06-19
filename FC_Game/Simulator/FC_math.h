@@ -6,7 +6,8 @@ typedef struct FC_POINT
 	float Y;	//cm
 
 	FC_POINT();
-	FC_POINT(float x, float y);
+	FC_POINT(float, float);
+	void operator=(const FC_POINT&);
 }FC_POINT, FC_VECTOR;
 
 static unsigned long fcx = 5128238, fcy = 1124132, fcz = 152341, fcw = 2596459;

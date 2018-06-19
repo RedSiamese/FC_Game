@@ -25,10 +25,11 @@ void add_car(const char*name, FC_POINT start_point) {
 }
 
 void set_car(const char*name, FC_POINT point, float dir, float v) {
-	game_env->get_car(name).control(0, v);
-	game_env->set_car_velocity(name, v);
-	game_env->set_car_xy(name, point);
-	game_env->set_car_dir(name, dir);
+	FC_CAR &car = game_env->get_car(name);
+	car.control(0, v);
+	game_env->set_car_velocity(car, v);
+	game_env->set_car_xy(car, point);
+	game_env->set_car_dir(car, dir);
 	
 }
 
