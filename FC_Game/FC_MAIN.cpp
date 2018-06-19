@@ -81,14 +81,14 @@ int main() {
 	auto w = game_env->get_car("0").get_sight()->width;
 	
 	for (game_env->start();;) {
-		game_env->get_car("0").set_velocity(100);
+		//game_env->get_car("0").set_velocity(100);
 		
-		auto TI = FC_CAR::get_track_info(game_env->get_car("0"));
+		auto TI = game_env->get_car("0").get_track_info();
 		auto d = 0.04*(TI.mid_curve.point[0].x - w / 2) + 0.04*(TI.mid_curve.point[TI.mid_curve.size / 4].x - w / 2) + 0.04*(TI.mid_curve.point[TI.mid_curve.size / 2].x - w / 2);
-		game_env->get_car("0").control(d, 100);
+		game_env->get_car("0").control(d, -100);
 		Sleep(1);
 
-		//printf("%lf", game_env->get_time());
+		printf("%d", game_env->get_time());
 	}
 	
 }

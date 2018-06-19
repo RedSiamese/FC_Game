@@ -2,6 +2,8 @@
 #include <python.h>
 
 #include "Simulator\FC_game.h"
+// #include "Simulator\FC_env.h"
+// #include "Simulator\FC_thread_show.h"
 
 #include "FC\FC_SDE.h"
 #include "FC\FC_IMAGE.h"
@@ -94,7 +96,6 @@ fc_track_info get_ti(const char* name) {
 	cvReleaseImage(&sight);
 	cvReleaseImage(&sight_t);
 	return TI;
-	//return game_env->get_car(name).get_track_info();
 }
 
 
@@ -170,6 +171,7 @@ static PyObject *Extest_ctrl(PyObject *self, PyObject *args) {
 		return NULL;
 	}
 	ctrl(s, degree, velocity);
+	//��Ҫ��c�м���Ľ��ת��python����s�����ַ����������͡�
 	return (PyObject *)Py_BuildValue("");
 }
 

@@ -64,7 +64,7 @@ public:
 	/*static*/
 public:
 
-	static fc_track_info get_track_info(FC_CAR&);
+	fc_track_info get_track_info();
 
 private:
 

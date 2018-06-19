@@ -97,14 +97,14 @@ FC_CAR::~FC_CAR()
 
 void FC_CAR::refresh_state(float zoom)
 {
-	if (!zoom) zoom = 1;
+	if (zoom == 0) zoom = 1;
 	float time_pass = 0.001 / zoom;
 	//P=TN/9550其中N由v代替
 	//速度变化
 	//功率
 	float P = f_system * dst_velocity;
 	//转矩
-	float F = P / (velocity.linear_velocity + 0.00001);
+	float F = P / (ABS(velocity.linear_velocity) + 0.00001);
 	float f = SGN(velocity.linear_velocity)*f_system;
 
 	float f_wheel_temp = f_wheel + fc_random_f(-velocity.linear_velocity / 500, 0.2);
@@ -217,16 +217,16 @@ void FC_CAR::refresh_state(float zoom)
 }
 
 /*static*/
-fc_track_info FC_CAR::get_track_info(FC_CAR& car)
+fc_track_info FC_CAR::get_track_info()
 {
 
-	FC_camera cam(car.get_cam());
+	FC_camera camera(cam);
 
-	for (; !car.is_refresh_finish(););
-	IplImage* sight = cvCloneImage(car.get_sight());
+	for (; !refresh_finish;);
+	IplImage* sig = cvCloneImage(this->sight);
 
-	IplImage* sight_t = cvCreateImage(CvSize(sight->width / 2, sight->height * 2), 8, 1);
-	cam.dpt_img(sight, sight_t);
+	IplImage* sight_t = cvCreateImage(CvSize(sig->width / 2, sig->height * 2), 8, 1);
+	camera.dpt_img(sig, sight_t);
 
 	fc_map Image = create_map(sight_t->width, sight_t->height, NULL);
 	memcpy(Image.buf, sight_t->imageData, sight_t->width*sight_t->height * sizeof(byte));
@@ -243,28 +243,27 @@ fc_track_info FC_CAR::get_track_info(FC_CAR& car)
 	CvPoint p;
 	for (int i = 0; i < TI.mid_curve.size; i++) {
 		p = cvPoint(TI.mid_curve.point[i].x, TI.mid_curve.point[i].y);
-		p = cam.pt_point(sight, sight_t, p);
-		TI.mid_curve.point[i] = fc_point(FALL_IN_(p.x, 0, sight->width - 1), FALL_IN_(p.y, 0, sight->height));
+		p = camera.pt_point(sig, sight_t, p);
+		TI.mid_curve.point[i] = fc_point(FALL_IN_(p.x, 0, sig->width - 1), FALL_IN_(p.y, 0, sig->height));
 	}
 	for (int i = 0; i < TI.right_curve.size; i++) {
 		p = cvPoint(TI.right_curve.point[i].x, TI.right_curve.point[i].y);
-		p = cam.pt_point(sight, sight_t, p);
-		TI.right_curve.point[i] = fc_point(FALL_IN_(p.x, 0, sight->width - 1), FALL_IN_(p.y, 0, sight->height));
+		p = camera.pt_point(sig, sight_t, p);
+		TI.right_curve.point[i] = fc_point(FALL_IN_(p.x, 0, sig->width - 1), FALL_IN_(p.y, 0, sig->height));
 	}
 	for (int i = 0; i < TI.left_curve.size; i++) {
 		cvPoint(TI.left_curve.point[i].x, TI.left_curve.point[i].y);
-		p = cam.pt_point(sight, sight_t, p);
-		TI.left_curve.point[i] = fc_point(FALL_IN_(p.x, 0, sight->width - 1), FALL_IN_(p.y, 0, sight->height));
+		p = camera.pt_point(sig, sight_t, p);
+		TI.left_curve.point[i] = fc_point(FALL_IN_(p.x, 0, sig->width - 1), FALL_IN_(p.y, 0, sig->height));
 	}
 
-	cvReleaseImage(&sight);
+	cvReleaseImage(&sig);
 	cvReleaseImage(&sight_t);
 	return TI;
 }
 
 
 void camera_refresh(FC_CAR* car) {
-	int time = -5;
 	while (1) {
 		if (car->env.get_time_speed())Sleep(4);
 		car->refresh_finish = false;
